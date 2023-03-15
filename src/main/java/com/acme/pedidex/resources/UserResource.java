@@ -1,17 +1,31 @@
 package com.acme.pedidex.resources;
 
 import com.acme.pedidex.entities.User;
+import com.acme.pedidex.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
 public class UserResource {
 
+    @Autowired
+    private UserService userService;
     @GetMapping
-    public ResponseEntity<User> findAll(){
-        return ResponseEntity.ok().body(new User(1L, "test", "test@mail.com", "84 9876534", "123"));
+    public ResponseEntity<List<User>> findAll(){
+        var users = userService.findAll();
+        return ResponseEntity.ok().body(users);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id){
+        var user = userService.findById(id);
+        return ResponseEntity.ok().body(user);
     }
 }
