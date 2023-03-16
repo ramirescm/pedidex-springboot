@@ -16,14 +16,15 @@ public class UserResource {
 
     @Autowired
     private UserService userService;
+
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<User>> findAll() {
         var users = userService.findAll();
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
+    public ResponseEntity<User> findById(@PathVariable Long id) {
         var user = userService.findById(id);
         return ResponseEntity.ok().body(user);
     }
@@ -37,5 +38,11 @@ public class UserResource {
                 .buildAndExpand(user.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(user);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
