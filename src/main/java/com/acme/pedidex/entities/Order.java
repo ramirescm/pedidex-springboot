@@ -21,9 +21,12 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
-
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
+
+    // order and payment must have the same id so we need to put cascade all
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
     public Order() {
     }
@@ -70,6 +73,22 @@ public class Order {
 
     public Set<OrderItem> getItems() {
         return items;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public Double getTotal() {
+        double sum = 0.0;
+        for (OrderItem item : items) {
+            sum += item.getSubtotal();
+        }
+        return sum;
     }
 
     @Override
