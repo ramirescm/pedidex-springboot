@@ -1,14 +1,8 @@
 package com.acme.pedidex.config;
 
-import com.acme.pedidex.entities.Category;
-import com.acme.pedidex.entities.Order;
-import com.acme.pedidex.entities.Product;
-import com.acme.pedidex.entities.User;
+import com.acme.pedidex.entities.*;
 import com.acme.pedidex.enums.OrderStatus;
-import com.acme.pedidex.repositories.CategoryRepository;
-import com.acme.pedidex.repositories.OrderRepository;
-import com.acme.pedidex.repositories.ProductRepository;
-import com.acme.pedidex.repositories.UserRepository;
+import com.acme.pedidex.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +25,9 @@ public class ProfileTestConfig implements CommandLineRunner {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -73,5 +70,13 @@ public class ProfileTestConfig implements CommandLineRunner {
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.CANCELED, u1);
 
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+
+        // order items
+        OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
+        OrderItem oi2 = new OrderItem(o1, p3, 1, p3.getPrice());
+        OrderItem oi3 = new OrderItem(o2, p3, 2, p3.getPrice());
+        OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
+
+        orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
     }
 }
