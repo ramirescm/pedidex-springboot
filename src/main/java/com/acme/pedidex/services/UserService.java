@@ -2,7 +2,11 @@ package com.acme.pedidex.services;
 
 import com.acme.pedidex.entities.User;
 import com.acme.pedidex.repositories.UserRepository;
+import com.acme.pedidex.services.exceptions.DatabaseException;
+import com.acme.pedidex.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +24,7 @@ public class UserService {
 
     public User findById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.get();
+        return user.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User save(User user) {
@@ -28,6 +32,28 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            // TODO: add logger
+            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            // TODO: add logger
+            // OBS: personalized exception to handler violation off integrity,
+            // pay attention this error must haven't send to front because expose database structure
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public User update(Long id, User user) {
+        var entity = userRepository.getReferenceById(id);
+        updateData(entity, user);
+        return userRepository.save(entity);
+    }
+
+    private void updateData(User entity, User user) {
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+        entity.setPhone(user.getPhone());
     }
 }
