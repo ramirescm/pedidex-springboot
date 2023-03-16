@@ -37,6 +37,7 @@ public class OrderItem implements Serializable {
         id.setOrder(order);
     }
 
+    // @JsonIgnore doesnt need here because we want orders with products etc..
     public Product getProduct() {
         return id.getProduct();
     }
