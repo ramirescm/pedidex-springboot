@@ -4,6 +4,7 @@ import com.acme.pedidex.entities.User;
 import com.acme.pedidex.repositories.UserRepository;
 import com.acme.pedidex.services.exceptions.DatabaseException;
 import com.acme.pedidex.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -46,9 +47,13 @@ public class UserService {
     }
 
     public User update(Long id, User user) {
-        var entity = userRepository.getReferenceById(id);
-        updateData(entity, user);
-        return userRepository.save(entity);
+        try {
+            var entity = userRepository.getReferenceById(id);
+            updateData(entity, user);
+            return userRepository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User entity, User user) {
