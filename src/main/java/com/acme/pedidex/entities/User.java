@@ -18,7 +18,7 @@ public class User implements Serializable {
     private String email;
     private String phone;
     private String password;
-    @JsonIgnore
+    @JsonIgnore  // this annotation is to stop cyclic reference without this load relations forever and ever
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 
@@ -26,6 +26,7 @@ public class User implements Serializable {
     }
 
     public User(Long id, String name, String email, String phone, String password) {
+        super();
         this.id = id;
         this.name = name;
         this.email = email;
