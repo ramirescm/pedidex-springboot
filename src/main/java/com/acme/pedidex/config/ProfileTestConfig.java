@@ -9,7 +9,6 @@ import com.acme.pedidex.repositories.CategoryRepository;
 import com.acme.pedidex.repositories.OrderRepository;
 import com.acme.pedidex.repositories.ProductRepository;
 import com.acme.pedidex.repositories.UserRepository;
-import com.acme.pedidex.resources.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -35,13 +34,15 @@ public class ProfileTestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        // category
         var c1 = new Category(null, "Eletronics");
         var c2 = new Category(null, "Books");
         var c3 = new Category(null, "Computers");
 
         categoryRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-
+        // product
         Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, "");
         Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, "");
         Product p3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, "");
@@ -50,12 +51,23 @@ public class ProfileTestConfig implements CommandLineRunner {
 
         productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
+        // product x category
+        p1.getCategories().add(c2);
+        p2.getCategories().add(c1);
+        p2.getCategories().add(c3);
+        p3.getCategories().add(c3);
+        p4.getCategories().add(c3);
+        p5.getCategories().add(c2);
+
+        productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+
+        // user
         var u1 = new User(null, "Maria", "maria@gmail.com", "48  99555-5555", "123");
         var u2 = new User(null, "João", "joao@gmail.com", "48  99555-4444", "456");
 
         userRepository.saveAll(Arrays.asList(u1, u2));
 
-
+        // orders
         Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), OrderStatus.WAIT_PAYMENT, u1);
         Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), OrderStatus.PAID, u2);
         Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), OrderStatus.CANCELED, u1);
