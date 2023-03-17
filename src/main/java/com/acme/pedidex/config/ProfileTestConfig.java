@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.Arrays;
 
 @Configuration
-@Profile("test")
+@Profile("dev") // dev-> mysql /test -> in memory
 public class ProfileTestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
@@ -33,9 +33,9 @@ public class ProfileTestConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         // category
-        var c1 = new Category(null, "Eletronics");
-        var c2 = new Category(null, "Books");
-        var c3 = new Category(null, "Computers");
+        var c1 = new Category("Eletronics");
+        var c2 = new Category("Books");
+        var c3 = new Category("Computers");
 
         categoryRepository.saveAll(Arrays.asList(c1, c2, c3));
 
