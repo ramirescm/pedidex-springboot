@@ -2,6 +2,7 @@ package com.acme.pedidex.services;
 
 import com.acme.pedidex.entities.Order;
 import com.acme.pedidex.repositories.OrderRepository;
+import com.acme.pedidex.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,6 @@ public class OrderService {
 
     public Order findById(Long id) {
         Optional<Order> order = orderRepository.findById(id);
-        return order.get();
+        return order.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 }

@@ -2,6 +2,7 @@ package com.acme.pedidex.services;
 
 import com.acme.pedidex.entities.Category;
 import com.acme.pedidex.repositories.CategoryRepository;
+import com.acme.pedidex.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,6 @@ public class CategoryService {
 
     public Category findById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        return category.get();
+        return category.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 }

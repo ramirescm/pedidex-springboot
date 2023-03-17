@@ -2,6 +2,7 @@ package com.acme.pedidex.services;
 
 import com.acme.pedidex.entities.Product;
 import com.acme.pedidex.repositories.ProductRepository;
+import com.acme.pedidex.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,6 @@ public class ProductService {
 
     public Product findById(Long id) {
         Optional<Product> product = productRepository.findById(id);
-        return product.get();
+        return product.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 }
